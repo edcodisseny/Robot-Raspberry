@@ -8,8 +8,8 @@ import time,os
 import RPi.GPIO as GPIO
 
 def byIR():
-	global ir
-	ucB = ir.read_byte(0x39)
+	global i2c
+	ucB = i2c.read_byte(0x39)
 	return ucB
 
 def bySensors():
@@ -114,7 +114,7 @@ def vMotion(nLeft, nRight): # -255 <= nLeft <= 255      -255 <= nRight <= 255
         i2c.write_byte(0x38,_motorStatus)
 
 def vFrontRight(value, mode):
-	global FORWARD,PWM_CONTROL_FRONT_RIGHT,_motorStatus
+	global FORWARD,PWM_CONTROL_FRONT_RIGHT,_motorStatus,i2c
 	if mode==FORWARD:
 		analogWrite(PWM_CONTROL_FRONT_RIGHT, value);
 		_motorStatus = (_motorStatus & (0b00111111) ) | (0x40 if (value != 0) else 0x00);
@@ -125,7 +125,7 @@ def vFrontRight(value, mode):
 
 
 def vFrontLeft(value, mode):
-        global FORWARD,PWM_CONTROL_FRONT_LEFT,_motorStatus
+        global FORWARD,PWM_CONTROL_FRONT_LEFT,_motorStatus,i2c
         if mode==FORWARD:
                 analogWrite(PWM_CONTROL_FRONT_LEFT, value);
                 _motorStatus = (_motorStatus & (0b11001111) ) | (0x10 if (value != 0) else 0x00);
@@ -135,7 +135,7 @@ def vFrontLeft(value, mode):
         i2c.write_byte(0x38,_motorStatus)
 
 def vBackRight(value, mode):
-        global FORWARD,PWM_CONTROL_BACK_RIGHT,_motorStatus
+        global FORWARD,PWM_CONTROL_BACK_RIGHT,_motorStatus,i2c
         if mode==FORWARD:
                 analogWrite(PWM_CONTROL_BACK_RIGHT, value);
                 _motorStatus = (_motorStatus & (0b11111100) ) | (0x02 if (value != 0) else 0x00);
@@ -146,7 +146,7 @@ def vBackRight(value, mode):
 
 
 def vBackLeft(value, mode):
-        global FORWARD,PWM_CONTROL_FRONT_LEFT,_motorStatus
+        global FORWARD,PWM_CONTROL_FRONT_LEFT,_motorStatus,i2c
         if mode==FORWARD:
                 analogWrite(PWM_CONTROL_BACK_LEFT, value);
                 _motorStatus = (_motorStatus & (0b11110011) ) | (0x04 if (value != 0) else 0x00);
@@ -165,7 +165,7 @@ def start(setup):
 	FORWARD = 0
 	BACKWARD = 1
 	os.system("clear")
-	ir = SMBus(1)
+	i2c = SMBus(1)
 	GPIO.setwarnings(False)
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(BUTTON_START,GPIO.IN,pull_up_down=GPIO.PUD_UP)
