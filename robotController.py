@@ -6,6 +6,11 @@
 from smbus import SMBus
 import time,os
 import RPi.GPIO as GPIO
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_SSD1306
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 def byIR():
 	global i2c
@@ -161,6 +166,7 @@ def start(setup):
 	global i2c,ir,BUTTON_START,TRIG,ECHO,_motorStatus
 	global PWM_CONTROL_BACK_RIGHT,PWM_CONTROL_BACK_LEFT,PWM_CONTROL_FRONT_RIGHT,PWM_CONTROL_FRONT_LEFT,FORWARD,BACKWARD
 	global pwmBR,pwmBL,pwmFR,pwmFL
+	global disp,font,image,draw,top,bottom,fill
 	BUTTON_START=17
 	FORWARD = 0
 	BACKWARD = 1
@@ -191,7 +197,38 @@ def start(setup):
 	pwmBL.start(0)
 	pwmFR.start(0)
 	pwmFL.start(0)
+	# Raspberry Pi pin configuration:
+	RST = 24
+	# 128x64 display with hardware I2C:
+	disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST)
+	# Initialize library.
+	disp.begin()
+	# Clear display.
+	disp.clear()
+	disp.display()
+	image = Image.new('1', (disp.width, disp.height))
+	# Get drawing object to draw on image.
+	draw = ImageDraw.Draw(image)
+	# Draw a black filled box to clear the image.
+	draw.rectangle((0,0,disp.width,disp.height), outline=0, fill=0)
+	padding = -2
+	top = padding
+	bottom = disp.height-padding
+	fill=255
+	font = ImageFont.load_default()
 	setup()
+
+def vDrawText(x,y,text):
+	global top, font, fill
+	draw.text((x, top+y), text, font=font,fill=fill)
+def vDisplay():
+	global disp,image
+	disp.image(image)
+	disp.display()
+def vDisplayClear():
+	global draw,disp,width
+	draw.rectangle((0,0,disp.width,disp.height), outline=0, fill=0)
+	disp.display()
 
 def main(loop):
 	try:

@@ -9,9 +9,9 @@ def setup():
 def loop():
 	global FORWARD,BACKWARD
 	vBackLeft(255, FORWARD)
-	vBackRight(100, FORWARD)
+	vBackRight(250, FORWARD)
 	vFrontLeft(200,FORWARD)
-	vFrontRight(50,FORWARD)
+	vFrontRight(250,FORWARD)
 
 start(setup)
 main(loop)
