@@ -21,10 +21,10 @@ Per a aquest procés, necessitarem connectar la targeta micro-sd al nostre ordin
 ### Crontab
 Creem un arxiu executable (donar-li permisos chmod 777) com start.sh, amb les següents línies:
 
-<code>
+```
  #!/bin/bash
  python3 /home/pi/lcdIP.py
-</code>
+```
 
 Executem al terminal:
 
