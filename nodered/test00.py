@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# robot_00.py
+# test00.py
 
 import paho.mqtt.client as mqtt
 import re, uuid
